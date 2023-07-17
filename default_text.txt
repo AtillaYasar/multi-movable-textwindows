@@ -1,2 +1,22 @@
-default text comes from "default_text.txt"
-you can change the default text
+[prompt]
+
+[/prompt]
+
+[font]
+size = 15
+fg = green
+family = calibri
+[/font]
+terminal
+
+[title]
+[/title]
+
+[macros]
+[/macros]
+
+[engine]
+gpt-3.5-turbo
+[/engine]
+gpt-3.5-turbo
+gpt-3.5-turbo-16k
