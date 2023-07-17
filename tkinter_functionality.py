@@ -1,7 +1,7 @@
 import tkinter as tk
 import tkinter.font as tkfont
 import colorsys
-import os, sys, json, time, requests, ast, pyperclip, random, openai
+import os, sys, json, time, requests, ast, random, openai
 
 import search_engines
 
