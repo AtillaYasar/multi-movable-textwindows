@@ -10,6 +10,9 @@ import tkinter_functionality
 import cv2
 import subprocess
 
+if 'backups' not in os.listdir():
+    os.mkdir('backups')
+
 def get_selected(text_widget):
     # returns mouse-selected text from a tk.Text widget
     try:
