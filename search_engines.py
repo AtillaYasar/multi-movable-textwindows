@@ -1,7 +1,5 @@
 import webbrowser
 
-haram_allowed = False
-
 def open_chrome_tab(url):
     #import webbrowser
 
