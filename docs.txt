@@ -1,0 +1,157 @@
+-- warning --
+	this explanation absolutely sucks and is only a bare minimum documenting of features. not maximally helpful at all.
+-- warning --
+
+
+== hotkeys and stuff ==
+	ctrl + drag mouse --> creates a square
+	esc --> delete current square
+	ctrl + s --> save the current state of the app (will make it load this way when you close and restart), and make a backup in the "backups" folder
+	f5 or ctrl+r --> run the "block" that you're in  (explanation of what a "block" is, and what each block does, is below)
+	alt + left/right/up/down --> make the current square narrower/wider/shorter/taller
+	alt + drag --> move current square to another place
+	double click the top grey thingy --> minimize/maximize
+	ctrl + p --> pop out the current window (something you can alt+tab to), copying its text content, size, font, but its broken somewhat and most features dont work (though llm prompting does work)
+	ctrl + b --> darken the first 2 letters of each word
+== hotkeys and stuff ==
+
+
+== explanation of each block ==
+	the type of block it is is defined by the surrounding bracketed lines.
+	
+	[prompt]
+	brief description of a wizard shop: 
+	[/prompt]
+	this is a "prompt" block. if you run this (f5 or ctrl+r), it will send that text to a language model and write the response to the end.
+		(AI model is defined by an "engine" block in the same window. in the default version of the program you only have "gpt-3.5-turbo" and "gpt-3.5-turbo-16k")
+
+	so in case of chatgpt, it will just continue the text like this:
+		[prompt]
+		brief description of a wizard shop: A wizard shop is a mystical and enchanting establishment that .... etc
+		[/prompt]
+
+	or you can do the normal usage of chatgpt where you ask it stuff
+		[prompt]
+		how to do make money with programming
+		
+		[/prompt]
+	it will tell you some nonsense, and you can continue the conversation like this:
+		[prompt]
+		how to do make money with programming
+		As an AI language model, blablabla
+		1) bla
+		2) mla
+		
+		ok explain step 2 more
+		
+		[/prompt]
+	and it will work.
+		(in the api call, the `messages` argument is just `[{'role':'user', 'content': the_whole_conversation}]` but it works fine.)
+	
+	you can select text from other squares' blocks with `{othersquare.blockname}`. for example:
+		[prompt]
+		hey chatgpt. i have some documentation, here:
+		---
+		{2.docdump}
+		---
+		explain what the third chapter is saying, in simple terms.
+		
+		
+		[/prompt]
+	this assumes you have another square, titled "2", with text like this:
+		....
+		[docdump]
+		and here you just copypaste some documentation, some chunk of text
+		[/docdump]
+		....
+	now in your other square, with the prompt block, you only have to write {2.docdump} to make it insert that stuff right before prompting, without polluting the prompt block.
+		when prompting, it will print the prompt to the terminal and you also get backups, so you can see the exact string that gets used, after inserting all the {} things.
+
+	[resize]
+	width = 300
+	height = 300
+	[/resize]
+	change width and height of the window.
+
+	[font]
+	size = 15
+	fg = cyan
+	bg = green
+	family = Calibri
+	[/font]
+	these are the 4 options available. (fg is foreground. bg is background)
+	colors are limited, but you can use hsv tuples (hue/saturation/value, scale goes between 0 and 10), like this:
+		fg = 5,5,5
+	which would be 50% hue, 50% saturation, 50% value
+	or you can write a color and edit it, like this:
+		fg = cyan -0,0,3
+	this takes cyan, then reduces the "value" by 30%, which just makes it dimmer.
+	hsv effects are roughly:
+		hue -- each number is a different color, so if you went across the full range (which you cant do with a scale that goes from 0 to 10 with no floats, sorry), you would visit every color like a rainbow (plus the colors a rainbow doesnt have)
+		saturation -- "that hue's colorness", so if you have orange and you lower its saturation, it becomes less "orangey"
+		value -- brightness
+
+	[on sel]
+	command1
+	command2
+	command3
+	[/on sel]
+	when you select text with the mouse and release it, run each command (one-liner command) in sequence.
+
+	[title]
+	blabla
+	[/title]
+	will change the title of this square to "blabla".
+		(should be a one-liner, but not sure when ill change this.)
+
+	script will simply run each line as a one-line command. (similar to `on sel` except it isnt upon selecting text). example:
+		[script]
+		resize(1 --> 400,300)
+		relocate(1 --> 0,0)
+		maximize(1)
+		[/script]
+	which does 3 things to the square that's titled "1"
+== explanation of each block ==
+
+
+== one-line commands ==
+- these are all simple, look at these examples to see how it works:
+	s google how to seduce women site:reddit.com
+	s youtube andrew schulz flagrant
+	s urban floppa
+	s google_img canada goose
+	s spotify joe rogan john carmack
+- "dl" will let you download from youtube, and "t" will just open a tab, like this:
+	t https://stampy.ai/
+	dl https://www.youtube.com/watch?v=VdwIoiT1sYM&ab_channel=MarySpender
+		(dl uses youtubepp instead of yt-dlp (https://github.com/yt-dlp/yt-dlp) which would be way better, but its fine. (btw youtubepp works by simply replacing "youtube" with "youtubepp" in the video url))
+- more complex oneliners:
+	run({squaretitle.blockname})
+		will find the square with that title, the block with that name, and run it.
+	resize(squaretitle --> 400,200)
+		resizes that square to width,height
+	relocate(squaretitle --> 0,0)
+		moves the top left of that square to x,y. 0,0 is the top left corner of the screen.
+	minimize(squaretitle) or maximize(squaretitle)
+		self-explanatory
+	write_to({fromthis.blockname} --> {tothis.blockname})
+		finds the text at fromthis.blockname (meaning, squaretitle.blockname) and writes it in tothis.blockname (replacing it)
+		{sel} is a special one, it will use the text that is currently selected by mouse.
+			(so you can do stuff with an [on sel] block if you get creative (examples in docs_advanced.txt).)
+	external(path --> squaretitle)
+		not obviously useful.
+		prints all text from a "framedata" json file (the one you get when you do ctrl+s)
+		so something like:
+			external(some_other_directory/backups/all_frames1689547287.341563.json --> music links)
+
+== one-line commands ==
+
+== macros affect one-line commands ==
+you can write things in a "macros" block to turn normal text into real commands. like this:
+	[macros]
+	stampy --> t https://stampy.ai/
+	inspiration --> s google_img canada goose
+	[/macros]
+so when you run a line with "stampy", it runs "t https://stampy.ai/" instead.
+	(i like using this feature for websites i often go to, because the macros look prettier than urls)
+== macros affect one-line commands ==

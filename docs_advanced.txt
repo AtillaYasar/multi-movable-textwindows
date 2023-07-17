@@ -1,0 +1,89 @@
+== fancy example. a way to combine multiple features to do cool stuff. ==
+specifically what this does is: "explain the selected text with chatgpt in another square"
+it requires 2 squares, titled "0" and "1".
+maybe you can guess what it does from this `on sel` block:
+	[on sel]
+	relocate(0 --> 0,0)
+	resize(0 --> 650,700)
+	relocate(1 --> 670,0)
+	resize(1 --> 600,700)
+	write_to({sel} --> {1.seldump})
+	write_to({1.template} --> {1.prompt})
+	run({1.prompt})
+	[/on sel]
+
+in case you cant guess it... heres the steps.
+	1) put this in a square titled "0":
+
+[prompt]
+tell me some cool stuff about gpus.
+
+[/prompt]
+
+[context]
+from a conversation about gpus
+[/context]
+
+[on sel]
+relocate(0 --> 0,0)
+resize(0 --> 650,700)
+relocate(1 --> 670,0)
+resize(1 --> 600,700)
+write_to({sel} --> {1.seldump})
+write_to({1.template} --> {1.prompt})
+run({1.prompt})
+[/on sel]
+
+[engine]
+gpt-3.5-turbo-16k
+[/engine]
+
+
+	2) put this in a square titled "1":
+[prompt]
+[/prompt]
+
+[seldump]
+[/seldump]
+
+[template]
+with this background context:
+---
+{0.context}
+---
+
+explain this in simple terms, using a goose analogy
+---
+{1.seldump}
+---
+
+
+[/template]
+
+[engine]
+gpt-3.5-turbo-16k
+[/engine]
+
+
+	3) now, when you do the prompt in 0, it will tell you about gpus. then when you select some part of the explanation and release the mouse, the selected text will go to {1.seldump}, and the {1.template} text will replace {1.prompt}, which includes {1.seldump} and {0.context}.
+== fancy example. a way to combine multiple features to do cool stuff. ==
+
+
+== variation of the above ==
+in case you dont like it immediately making api calls whenever you select.
+instead of the above `on sel`, you have these 2:
+[on sel]
+write_to({sel} --> {1.seldump})
+[/on sel]
+(and i removed redundant resize and relocate stuff)
+
+[script]
+write_to({1.template} --> {1.prompt})
+run({1.prompt})
+[/script]
+
+and a single line like this:
+run({0.script})
+
+now, when you select text, it puts it into seldump and you can freely edit the template or even the prompt. and when you're satisfied you ctrl+click run the `run({0.script})` line to get the explanation.
+== variation of the above ==
