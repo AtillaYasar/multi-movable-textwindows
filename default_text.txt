@@ -1,1 +1,2 @@
 default text comes from "default_text.txt"
+you can change the default text
