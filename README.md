@@ -13,3 +13,5 @@
 - docs.txt
 - docs_advanced.txt
 
+## when refactor/why so messy?
+at some point i wanted to refactor it and clean things up, but ive been satisfied with it for like a month now and just using it all day. so there is no need to clean up the code or make it easier to debug, for now.
