@@ -452,7 +452,7 @@ def language_model(prompt, as_stream=False, print_func=print, model='gpt-3.5-tur
         "stream": True,
     }
     payload = json.dumps(payload_dict)
-    session = """eyJhbGciOiJSUzI1NiIsImtpZCI6Imluc18yTWtjQlhndjhpbEwxcGNDTnB3MXV5anF0azgiLCJ0eXAiOiJKV1QifQ.eyJhenAiOiJodHRwczovL25hdC5kZXYiLCJleHAiOjE2ODU4NDA0NDMsImlhdCI6MTY4NTg0MDM4MywiaXNzIjoiaHR0cHM6Ly9jbGVyay5uYXQuZGV2IiwianRpIjoiZjVkOWZjNWJkNjM3NzY5MWMyYTQiLCJuYmYiOjE2ODU4NDAzNzMsInNpZCI6InNlc3NfMlFWckY4dlNOVmNvVGdVamE1S2xpWHJnMGZyIiwic3ViIjoidXNlcl8yTjhBSUVtdXM4eTlvSk9ZdGpHTFFmSWZ3UlMiLCJ1c2VyX2VtYWlsIjoic2hpcm95YXNoYTEzNkBnbWFpbC5jb20iLCJ1c2VyX2ZpcnN0X25hbWUiOiJTaGlyb3lhc2hhIiwidXNlcl9pZCI6InVzZXJfMk44QUlFbXVzOHk5b0pPWXRqR0xRZklmd1JTIiwidXNlcl9sYXN0X25hbWUiOm51bGx9.DBGENexe6u0I2WwZoyW1qGtAw7jWUX3UOiILNG7q6zYwWarvKnLuI65RKrPnsoYZxvVb0AyrHaXdqnRwc_B9wZ3f9xksoA5RVVcCwBN6EBgb7Je_LmGfJ8H5E2JLHh8uVJn_W8mJRWE6nqVH4wJaj2l654fX8Yp2HBfLAI3YyfWO5387B-PYnJPZ5CKFrMzaKJKwB5TdElMpFiJuvTI_KrnpCXVnIaOGwWnqwouhYpwbKY8dMBFq9n1sEAVqvwfjDUAHtQ5ri09_UBuGBnHCay5FsY9_byL5sKEQIYvvW8ZqLOip9LN4vrzo1ergcUZBzj_8veTf9yQl2iRNX0Gg0Q"""
+    session = """some stuff here"""
     headers = {
         "Content-Type": "text/plain;charset=UTF-8",
         "Accept": "*/*",
