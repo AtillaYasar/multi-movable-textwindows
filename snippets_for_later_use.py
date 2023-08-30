@@ -1,15 +1,19 @@
 """
 for stuff ive written/implemented locally but not yet implemented in this repo
 """
-
+        # tkinter_text.py, def run_flag
         def evalin_flag(flagged):
             program = flagged
             namespace = {}
             exec(program, namespace)
-            result = namespace['result']
+            if 'result' in namespace:
+                result = namespace['result']
 
-            title = self.master['text']
-            self.replace_flagged('evalout', str(result))
+                title = self.master['text']
+                self.replace_flagged('evalout', str(result))
+            if 'scriptlines' in namespace:
+                scriptlines = namespace['scriptlines']
+                self.run_script_lines(scriptlines)
 
         # in MyText.on_keypress in tkinter_text.py
         elif keysym.startswith('F'):  # do something on f keys
