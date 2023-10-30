@@ -62,3 +62,24 @@ for stuff ive written/implemented locally but not yet implemented in this repo
         # update data
         with open(path, 'w') as f:
             json.dump(data, f, indent=2)
+
+# class MyText(tk.Text):
+    def flash_location(self):
+        tagname = 'inversion'
+        def invert():
+            fg = self['fg']
+            bg = self['bg']
+            self.tag_add(tagname, 'insert -1c', 'insert +1c')
+            self.tag_config(tagname, **{'foreground':bg, 'background':fg})
+        def revert():
+            self.tag_delete(tagname)
+        invert()
+        self.master.master.master.after(500, revert)  # the root window, tk.Tk()
+
+    def select(self):
+        self.focus_set()
+        idx = self.search('[prompt]\n', '1.0') + ' +1l linestart'
+        self.mark_set('insert', idx)
+        self.see(idx + ' -1l')
+        self.master.tkraise()
+        self.flash_location()
