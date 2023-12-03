@@ -37,49 +37,65 @@ for stuff ive written/implemented locally but not yet implemented in this repo
         else:
             data = {}
 
-        # check data
-        if cmd in data:
-            if all([key in data[cmd] for key in ['last opened', 'timeout']]):
-                correct = True
-            else:
-                correct = False
-        else:
-            correct = False
-        if not correct:
-            data[cmd] = {
-                'last opened': 0,
-                'timeout': default_timeout,
-            }
+# autoinsert example, in tkinter.Text, when you hit Enter, based on the current/next/previous line and the full text of the editor
+    def on_keyrelease(self, event):
+        key = event.keysym
+        if key == 'Return':
+            # detect line, nextline and fulltext.
+            idx = self.index('insert')
+            line = self.get(f'{idx} linestart', f'{idx} lineend')
+            prevline = self.get(f'{idx} -1l linestart', f'{idx} -1l lineend')
+            nextline = self.get(f'{idx} +1l linestart', f'{idx} +1l lineend')
+            fulltext = self.get('1.0', 'end')
 
-        # check if goes through
-        elapsed = time.time() - data[cmd]['last opened']
-        if elapsed > data[cmd]['timeout']:
-            search_engines.open_chrome_tab(words[1])
-            data[cmd]['last opened'] = time.time()
-        else:
-            print(f'not opening tab, elapsed={elapsed}, timeout={data[cmd]["timeout"]}')
-        
-        # update data
-        with open(path, 'w') as f:
-            json.dump(data, f, indent=2)
+            # some conditions before it does autoinsertion
+            if all([
+                prevline.startswith('['),
+                prevline.endswith(']'),
+                not prevline.startswith('[/'),
+                not nextline.startswith('['),
+            ]):
+                flag = prevline[1:-1]
+                closer = f'[/{flag}]'
+                if closer in fulltext:
+                    return
 
-# class MyText(tk.Text):
-    def flash_location(self):
-        tagname = 'inversion'
-        def invert():
-            fg = self['fg']
-            bg = self['bg']
-            self.tag_add(tagname, 'insert -1c', 'insert +1c')
-            self.tag_config(tagname, **{'foreground':bg, 'background':fg})
-        def revert():
-            self.tag_delete(tagname)
-        invert()
-        self.master.master.master.after(500, revert)  # the root window, tk.Tk()
-
-    def select(self):
-        self.focus_set()
-        idx = self.search('[prompt]\n', '1.0') + ' +1l linestart'
-        self.mark_set('insert', idx)
-        self.see(idx + ' -1l')
-        self.master.tkraise()
-        self.flash_location()
+                # now decide what to insert based on the flag
+                if flag == 'font':
+                    to_insert = '\n'.join([
+                        'size = 16',
+                        'fg = grey',
+                        'family = calibri',
+                        closer
+                    ])
+                elif flag == 'engine':
+                    to_insert = '\n'.join([
+                        'gpt-3-oai',
+                        closer,
+                        'kayra',
+                        'gpt-4v',
+                    ])
+                elif flag == 'on sel':
+                    to_insert = '\n'.join([
+                        'write_to({sel} --> {0.seldump})',
+                        'run({0.emb})',
+                        closer,
+                    ])
+                elif flag == 'emb':
+                    to_insert = '\n'.join([
+                        '!query={0.seldump}',
+                        '!output={1.yo}',
+                        closer,
+                    ])
+                elif flag == 'feed emb':
+                    to_insert = '\n'.join([
+                        '!tags=',
+                        closer
+                    ])
+                else:
+                    to_insert = closer
+                self.insert('insert', to_insert)
+            elif prevline.startswith('$') and prevline.endswith('$'):
+                # not implemented or figured out yet
+                to_insert = ''
+                self.insert('insert', to_insert)
